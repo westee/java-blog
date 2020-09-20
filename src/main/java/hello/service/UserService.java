@@ -1,7 +1,18 @@
 package hello.service;
 
-public class UserService {
+import hello.mapper.UserMapper;
 
-    public void getUserById(int userId) {
+import javax.inject.Inject;
+
+public class UserService {
+    private UserMapper userMapper;
+
+    @Inject
+    public UserService(UserMapper userMapper){
+        this.userMapper = userMapper;
+    }
+
+    public User getUserById(int userId) {
+        return userMapper.findUserById(userId);
     }
 }

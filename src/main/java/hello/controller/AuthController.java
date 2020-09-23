@@ -1,28 +1,36 @@
 package hello.controller;
 
 import hello.entiry.User;
+import hello.service.UserService;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.inject.Inject;
 import java.util.Map;
 
 @RestController
 public class AuthController {
-    UserDetailsService userDetailsService;
-    AuthenticationManager authenticationManager;
+    private UserDetailsService userDetailsService;
+    private AuthenticationManager authenticationManager;
+    private UserService userService;
+
     @Inject
-    public AuthController(UserDetailsService userDetailsService, AuthenticationManager authenticationManager) {
+    public AuthController(UserDetailsService userDetailsService,
+                          AuthenticationManager authenticationManager,
+                          UserService userService) {
         this.userDetailsService = userDetailsService;
         this.authenticationManager = authenticationManager;
+        this.userService =userService;
+    }
+
+    @RequestMapping("/")
+    public User index(@RequestParam("id") int id){
+        return this.userService.getUserById(id);
     }
 
     @GetMapping("/auth")
@@ -36,7 +44,7 @@ public class AuthController {
         String password = usernameAndPassword.get("password");
         UserDetails userDetails;
         try{
-            userDetails = userDetailsService.loadUserByUsername(username);
+            userDetails = userService.loadUserByUsername(username);
         } catch (UsernameNotFoundException e){
             return new Result("fail","用户不存在", false);
         }
@@ -45,7 +53,7 @@ public class AuthController {
 
         try{
             authenticationManager.authenticate(token);
-            User user = new User(1, "老王");
+            User user = new User(1, userDetails.getUsername());
             return new Result("ok", "登录成功", true, user);
         } catch (BadCredentialsException e){
             return new Result("fail","用户不存在或密码不正确", false);

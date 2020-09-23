@@ -1,6 +1,6 @@
 package hello.mapper;
 
-import hello.service.User;
+import hello.entiry.User;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;

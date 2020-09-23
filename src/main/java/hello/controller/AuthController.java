@@ -1,6 +1,8 @@
 package hello.controller;
 
+import hello.entiry.User;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -32,16 +34,22 @@ public class AuthController {
     public Result login(@RequestBody Map<String, String> usernameAndPassword){
         String username = usernameAndPassword.get("username");
         String password = usernameAndPassword.get("password");
-//        UserDetails userDetails;
-//        try{
-            UserDetails userDetails = userDetailsService.loadUserByUsername(username);
-//        } catch (UsernameNotFoundException e){
-//            return new Result("fail","用户不存在", false);
-//        }
+        UserDetails userDetails;
+        try{
+            userDetails = userDetailsService.loadUserByUsername(username);
+        } catch (UsernameNotFoundException e){
+            return new Result("fail","用户不存在", false);
+        }
 
         UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(userDetails, password, userDetails.getAuthorities());
-        authenticationManager.authenticate(token);
-        return null;
+
+        try{
+            authenticationManager.authenticate(token);
+            User user = new User(1, "老王");
+            return new Result("ok", "登录成功", true, user);
+        } catch (BadCredentialsException e){
+            return new Result("fail","用户不存在或密码不正确", false);
+        }
     }
 
     private static class Result {

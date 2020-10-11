@@ -24,7 +24,7 @@ public class UserService implements UserDetailsService {
                        UserMapper userMapper){
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
         this.userMapper = userMapper;
-        this.save("laowang", "123");
+//        this.save("laowang", "123");
     }
 
     private void save(String username, String password) {
@@ -47,7 +47,6 @@ public class UserService implements UserDetailsService {
             throw new UsernameNotFoundException("用户名不存在");
         }
 
-//        User user = users.get(username);
         return new org.springframework.security.core.userdetails.User(username, user.getEncryptedPassword(), Collections.emptyList());
     }
 

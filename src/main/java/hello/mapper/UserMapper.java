@@ -13,6 +13,7 @@ public interface UserMapper {
     @Select("select * from user where username = #{username}")
     User findUserByUsername(@Param("username") String username);
 
-    @Select("insert into user(username, encrypted_password, created_at, updated_at) values (#{username} #{password})")
+    @Select("insert into user(username, encrypted_password, created_at, updated_at) " +
+            "values(#{username}, #{password}, now(), now())")
     void save(@Param("username") String username, @Param("password") String password);
 }

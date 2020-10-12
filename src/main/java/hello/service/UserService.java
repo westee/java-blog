@@ -27,7 +27,7 @@ public class UserService implements UserDetailsService {
 //        this.save("laowang", "123");
     }
 
-    private void save(String username, String password) {
+    public void save(String username, String password) {
         userMapper.save(username, bCryptPasswordEncoder.encode(password));
 //        users.put(username, new User(1, "2", bCryptPasswordEncoder.encode(password)));
     }

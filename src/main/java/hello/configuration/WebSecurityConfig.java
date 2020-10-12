@@ -1,5 +1,6 @@
 package hello.configuration;
 
+import hello.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -20,7 +21,12 @@ import javax.inject.Inject;
 @EnableWebSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Inject
-    UserDetailsService userDetailsService;
+    private UserService userService;
+
+//    @Inject
+//    public WebSecurityConfig(UserService userService) {
+//        this.userService = userService;
+//    }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -50,7 +56,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
     public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception{
-        auth.userDetailsService(userDetailsService).passwordEncoder(bCryptPasswordEncoder());
+        auth.userDetailsService(userService).passwordEncoder(bCryptPasswordEncoder());
     }
 
     @Bean

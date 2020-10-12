@@ -15,8 +15,8 @@ import java.util.Map;
 
 @RestController
 public class AuthController {
-    private UserService userService;
-    private AuthenticationManager authenticationManager;
+    private final UserService userService;
+    private final AuthenticationManager authenticationManager;
 
     @Inject
     public AuthController(AuthenticationManager authenticationManager,
@@ -40,6 +40,19 @@ public class AuthController {
             return new Result("ok", "用户未登录", false);
         } else {
             return new Result("ok", "登录成功", true, user);
+        }
+    }
+
+    @PostMapping("/auth/login")
+    public Result register(@RequestBody Map<String, String> usernameAndPassword){
+        String username = usernameAndPassword.get("username");
+        String password = usernameAndPassword.get("password");
+        UserDetails userDetails = userService.loadUserByUsername(username);
+        if(userDetails == null){
+            userService.save(username, password);
+            return new Result("ok", "success!", false);
+        } else {
+            return new Result("fail", "用户已经存在", false);
         }
     }
 

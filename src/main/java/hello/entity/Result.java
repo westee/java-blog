@@ -1,4 +1,4 @@
-package hello.entiry;
+package hello.entity;
 
 public class Result {
     String msg;

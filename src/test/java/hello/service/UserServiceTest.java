@@ -1,6 +1,6 @@
 package hello.service;
 
-import hello.entiry.User;
+import hello.entity.User;
 import hello.mapper.UserMapper;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;

@@ -1,12 +1,13 @@
 package hello.controller;
 
-import hello.entiry.Result;
-import hello.entiry.User;
+import hello.entity.Result;
+import hello.entity.User;
 import hello.service.UserService;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -34,9 +35,9 @@ public class AuthController {
 
     @GetMapping("/auth")
     public Object auth() {
-        String name = SecurityContextHolder.getContext().getAuthentication().getName();
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
-        User user = userService.getUserByUsername(name);
+        User user = userService.getUserByUsername(authentication == null ? null : authentication.getName());
 
         if (user == null) {
             return new Result("ok", "用户未登录", false);

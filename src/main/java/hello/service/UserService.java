@@ -1,6 +1,6 @@
 package hello.service;
 
-import hello.entiry.User;
+import hello.entity.User;
 import hello.mapper.UserMapper;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -24,12 +24,10 @@ public class UserService implements UserDetailsService {
                        UserMapper userMapper){
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
         this.userMapper = userMapper;
-//        this.save("laowang", "123");
     }
 
     public void save(String username, String password) {
         userMapper.save(username, bCryptPasswordEncoder.encode(password));
-//        users.put(username, new User(1, "2", bCryptPasswordEncoder.encode(password)));
     }
 
     public User getUserById(int id) {

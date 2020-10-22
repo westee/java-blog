@@ -99,8 +99,6 @@
         </dependency>
 
 
-
-
     </dependencies>
 
     <build>
@@ -127,9 +125,9 @@
                             <goal>migrate</goal>
                         </goals>
                         <configuration>
-                            <url>jdbc:mysql://localhost:3307/wxd?useSSL=false&amp;allowPublicKeyRetrieval=true</url>
+                            <url>jdbc:mysql://localhost:3306/blog?useSSL=false&amp;allowPublicKeyRetrieval=true</url>
                             <user>root</user>
-                            <password>my-secret-pw</password>
+                            <password>root</password>
                         </configuration>
                     </execution>
                 </executions>
@@ -138,10 +136,20 @@
             <plugin>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>2.22.2</version>
+                <configuration>
+                    <excludes>
+                        <exclude>**/*IntegrationTest</exclude>
+                    </excludes>
+                </configuration>
             </plugin>
             <plugin>
                 <artifactId>maven-failsafe-plugin</artifactId>
                 <version>2.22.2</version>
+                <configuration>
+                    <includes>
+                        <include>**/*IntegrationTest</include>
+                    </includes>
+                </configuration>
             </plugin>
 
             <plugin>

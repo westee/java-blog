@@ -1,7 +1,6 @@
 package hello.controller;
 
-import hello.entity.Result;
-import hello.entity.User;
+import hello.entity.*;
 import hello.service.UserService;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -40,23 +39,23 @@ public class AuthController {
         User user = userService.getUserByUsername(authentication == null ? null : authentication.getName());
 
         if (user == null) {
-            return new Result("ok", "用户未登录", false);
+            return LoginResult.success( "用户未登录", false);
         } else {
-            return new Result("ok", "登录成功", true, user);
+            return LoginResult.success("登录成功", true, user);
         }
     }
 
     @PostMapping("/auth/register")
-    public Result register(@RequestBody Map<String, String> usernameAndPassword) {
+    public LoginResult register(@RequestBody Map<String, String> usernameAndPassword) {
         String username = usernameAndPassword.get("username");
         String password = usernameAndPassword.get("password");
         User user = userService.getUserByUsername(username);
         try {
             userService.save(username, password);
         } catch (DuplicateKeyException e) {
-            return Result.failure( "用户已经存在");
+            return LoginResult.failure( "用户已经存在", false);
         }
-        return Result.success("注册成功!");
+        return LoginResult.success("注册成功!", false);
     }
 
     @PostMapping("/auth/login")
@@ -67,7 +66,7 @@ public class AuthController {
         try {
             userDetails = userService.loadUserByUsername(username);
         } catch (UsernameNotFoundException e) {
-            return Result.failure("用户不存在");
+            return LoginResult.failure("用户不存在", false);
         }
 
         UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(userDetails, password, userDetails.getAuthorities());
@@ -77,9 +76,9 @@ public class AuthController {
 
             SecurityContextHolder.getContext().setAuthentication(token);
 
-            return Result.success( "登录成功");
+            return LoginResult.success( "登录成功", true);
         } catch (BadCredentialsException e) {
-            return Result.failure("用户不存在或密码不正确");
+            return LoginResult.failure("用户不存在或密码不正确", false);
         }
     }
 }
